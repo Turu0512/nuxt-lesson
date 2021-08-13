@@ -33,8 +33,14 @@ remove: firestoreAction((context, id) => {
 }),
 // チェックボックスの管理
 toggle: firestoreAction((context, todo) => {
- todoRef.doc(todo.id).update({
+ todosRef.doc(todo.id).update({
   done: !todo.done
  })
 })
+}
+
+export const getters = {
+ orderdTodos: state => {
+  return _.sortBy(state.todos, 'created')
+ }
 }
