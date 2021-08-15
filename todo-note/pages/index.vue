@@ -21,7 +21,6 @@
 export default {
   data() {
     return {
-      todos:['これと','あれと','それ'],
       todo:''
     }
     
@@ -29,12 +28,17 @@ export default {
   methods: {
     submitTodo(){
       if(this.todo){
-        this.todos.push(this.todo)
+        this.$store.commit('todos/submitTodo',this.todo)
         this.todo=''
       }
     },
     deleteTodo(index){
-      this.todos.splice(index,1)
+      this.$store.commit('todos/deleteTodo',index)
+    }
+  },
+  computed: {
+    todos(){
+      return this.$store.getters['todos/todos']
     }
   }
 }
