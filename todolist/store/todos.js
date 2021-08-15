@@ -7,7 +7,7 @@ const todosRef = db.collection('todos')
 // collectionはtodosを使うという設定
 
 export const state = () => ({
- todos:[]
+ todos:[],
 })
 
 export const actions ={
@@ -22,6 +22,7 @@ export const actions ={
    todosRef.add({
     name: name,
     done: false,
+    status:1,
     created: firebase.firestore.FieldValue.serverTimestamp()
     // firestoreから現在時刻の取得（ローカルサーバーの時刻はズレる恐れがあるので）
    })
@@ -36,11 +37,19 @@ toggle: firestoreAction((context, todo) => {
  todosRef.doc(todo.id).update({
   done: !todo.done
  })
-})
+}),
+
+// うまく行ってない
+changeStatus: firestoreAction((context, todo) => {
+ todosRef.doc(todo.id).update({
+  status: todo.status++
+ }) 
+}),
 }
 
 export const getters = {
  orderdTodos: state => {
-  return _.sortBy(state.todos, 'created')
+  return _.sortBy(state.todos, 'created').reverse()
+  // reverseを入れると順番を逆にできる
  }
 }

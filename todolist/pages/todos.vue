@@ -9,7 +9,8 @@
      :checked="todo.done"
      >
      <span :class="{ done:todo.done }">
-     {{ todo.name }} {{ todo.created.toDate() | dateFilter }}
+     {{ todo.name }} {{ todo.created.toDate() | dateFilter }} 
+     <button @click="changeStatus(todo)">{{todo.status}}</button>
      </span>
      <button @click="remove(todo.id)">X</button>
       
@@ -46,6 +47,9 @@ methods:{
  toggle(todo){
   this.$store.dispatch("todos/toggle",todo)
   // idとdoneの値だ欲しいので、引数にTodo
+ },
+ changeStatus(todo){
+  this.$store.dispatch("todos/changeStatus",todo)
  }
 },
 computed:{
