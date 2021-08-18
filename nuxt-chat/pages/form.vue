@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     async submit(){
-      this.$store.commit('chat/ADD_MESSAGE',this.form)
+      await this.$fb.firestore().collection("messages").add(this.form)
       this.$router.push("/")
       },
     
