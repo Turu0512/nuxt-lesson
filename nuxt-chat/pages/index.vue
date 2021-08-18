@@ -24,14 +24,16 @@
         
       }
     },
+    
     computed:{
       messages(){
         return this.$store.state.chat.messages
       }
     },
-    async mounted(){
-    },
 
+  async mounted(){
+      await this.$store.dispatch("chat/getMessages")
+    },
   }
 </script>
 
