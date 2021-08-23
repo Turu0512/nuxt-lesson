@@ -57,6 +57,8 @@
 </template>
 
 <script>
+
+
 export default {
 data(){
   return {
@@ -82,13 +84,13 @@ data(){
 },
 
 methods: {
-  addTodo(){
+  async addTodo(){
     let newTodo = {
       id:Date.now(),
       title:this.newTodo,
       done:false
     } 
-    this.todos.push(newTodo)
+    await this.$store.dispatch('todo/addTodo',newTodo)
     this.newTodo=''
   },
   doneTodo(id){
