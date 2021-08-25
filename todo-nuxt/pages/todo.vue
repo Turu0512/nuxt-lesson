@@ -63,23 +63,16 @@ export default {
 data(){
   return {
     newTodo: '',
-    todos:[
-      {
-        id:1,
-        title:"hoge",
-        done:false
-      },
-      {
-        id:2,
-        title:"hoge2",
-        done:false
-      },
-      {
-        id:3,
-        title:"hoge3",
-        done:false
-      }
-    ]
+  }
+},
+
+created(){
+  return this.$store.dispatch('todo/fetchTodos')
+},
+
+computed:{
+  todos(){
+    return this.$store.getters['todo/todos']
   }
 },
 
@@ -92,13 +85,15 @@ methods: {
     } 
     await this.$store.dispatch('todo/addTodo',newTodo)
     this.newTodo=''
+    this.$store.dispatch('todo/fetchTodos')
   },
   doneTodo(id){
     let todo = this.todos.filter(todo => todo.id === id)[0]
     todo.done = !todo.done
 },
-  deleteTodo(id){
-    this.todos = this.todos.filter(todo => todo.id !==id )
+  deleteTodo(index){
+    this.$store.dispatch('todo/deleteTodo',index)
+    // console.log(index)
   }
 }
 }
