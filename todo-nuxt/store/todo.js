@@ -20,7 +20,7 @@ export const actions = {
   commit('addTodos',todo)
  },
 
-async deleteTodo({commit},id){
+async deleteTodo({dispatch},id){
   // return new Promise((resolve,reject) => { 
   //  this.$fire.firestore.collection("todos").where('id','==',id).get()
   //  .then(snapshot =>{snapshot.forEach(doc => {
@@ -31,17 +31,21 @@ async deleteTodo({commit},id){
   // })
   //  })
 
-  let todos = this.$fire.firestore.collection("todos").where('id','==',id)
-  let todosSnapshot = await todos.get()
-  await Promise.all(
-  todosSnapshot.docs.map(doc => doc.ref.delete())
-);
+//   let todos = this.$fire.firestore.collection("todos").where('id','==',id)
+//   let todosSnapshot = await todos.get()
+//   todosSnapshot.docs.map(doc => doc.ref.delete()
+// );
 
+let todos = this.$fire.firestore.collection("todos").where('id','==',id)
+await todos.get().then(querySnapshot => querySnapshot.docs.map(doc => doc.ref.delete())
+)
+dispatch('fetchTodos')
 // SnapShotが取れない
-// let todos = this.$fire.firestore.collection("todos").where('id','==',id)
-// let todosSnapshot = await todos.doc().get()
-// let todo = todosSnapshot.data()
-// console.log(todo)
+// const todosRef = this.$fire.firestore.collection('todos')
+// const deleteTodosRef = todosRef.doc(id)
+// console.log(deleteTodosRef)
+
+
   }
   
  }

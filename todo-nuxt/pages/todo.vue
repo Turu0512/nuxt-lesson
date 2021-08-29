@@ -77,14 +77,14 @@ computed:{
 },
 
 methods: {
-  async addTodo(){
+  addTodo(){
     if(this.newTodo){
     let newTodo = {
       id:Date.now(),
       title:this.newTodo,
       done:false
     } 
-    await this.$store.dispatch('todo/addTodo',newTodo)
+    this.$store.dispatch('todo/addTodo',newTodo)
     this.newTodo=''
     this.$store.dispatch('todo/fetchTodos')
     }
@@ -93,9 +93,8 @@ methods: {
     let todo = this.todos.filter(todo => todo.id === id)[0]
     todo.done = !todo.done
 },
-  deleteTodo(id){
-    this.$store.dispatch('todo/deleteTodo',id)
-    console.log(id)
+  async deleteTodo(id){
+    await this.$store.dispatch('todo/deleteTodo',id)
   }
 }
 }
