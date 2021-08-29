@@ -1,6 +1,5 @@
 export const state = () => ({
 todos: [
- 
 ]
 })
 
@@ -21,11 +20,33 @@ export const actions = {
   commit('addTodos',todo)
  },
 
- deleteTodo({commit},id){
-  console.log(id)
-  this.$fire.firestore.collection("todos").doc(id).delete()
+async deleteTodo({commit},id){
+  // return new Promise((resolve,reject) => { 
+  //  this.$fire.firestore.collection("todos").where('id','==',id).get()
+  //  .then(snapshot =>{snapshot.forEach(doc => {
+  //   console.log(doc)
+  //   console.log(snapshot)
+  //   this.$fire.firestore.collection("todos").doc(doc.id).delete()
+  //  })
+  // })
+  //  })
+
+  let todos = this.$fire.firestore.collection("todos").where('id','==',id)
+  let todosSnapshot = await todos.get()
+  await Promise.all(
+  todosSnapshot.docs.map(doc => doc.ref.delete())
+);
+
+// SnapShotが取れない
+// let todos = this.$fire.firestore.collection("todos").where('id','==',id)
+// let todosSnapshot = await todos.doc().get()
+// let todo = todosSnapshot.data()
+// console.log(todo)
+  }
+  
  }
-}
+
+
 
 export const mutations = {
 initTodos(state){

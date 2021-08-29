@@ -1,5 +1,5 @@
 <template>
-<div class="">
+<div>
   <h1>TODO LIST</h1>
   <v-text-field
   v-model="newTodo"
@@ -78,6 +78,7 @@ computed:{
 
 methods: {
   async addTodo(){
+    if(this.newTodo){
     let newTodo = {
       id:Date.now(),
       title:this.newTodo,
@@ -86,14 +87,15 @@ methods: {
     await this.$store.dispatch('todo/addTodo',newTodo)
     this.newTodo=''
     this.$store.dispatch('todo/fetchTodos')
+    }
   },
   doneTodo(id){
     let todo = this.todos.filter(todo => todo.id === id)[0]
     todo.done = !todo.done
 },
-  deleteTodo(index){
-    this.$store.dispatch('todo/deleteTodo',index)
-    // console.log(index)
+  deleteTodo(id){
+    this.$store.dispatch('todo/deleteTodo',id)
+    console.log(id)
   }
 }
 }
