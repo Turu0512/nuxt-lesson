@@ -18,7 +18,7 @@
       two-line
       flat
     >
-    <div v-for="todo in todos" :key="todo.id">
+    <div v-for="(todo,index) in todos" :key="todo.id">
         <v-list-item
         @click="doneTodo(todo.id)"
         :class="{'grey darken-1' : todo.done}"
@@ -33,14 +33,14 @@
 
             <v-list-item-content>
               <v-list-item-title :class="{'text-decoration-line-through' : todo.done}">
-                {{todo.title}}
+                {{todo.todo}}
                 </v-list-item-title>
               
             </v-list-item-content>
 
             <v-list-item-action>
           <v-btn icon
-          @click.stop="deleteTodo(todo.id)">
+          @click.stop="deleteTodo(index)">
             <v-icon color="grey lighten-1">mdi-delete</v-icon>
           </v-btn>
         </v-list-item-action>
@@ -60,18 +60,19 @@
 
 
 export default {
+  async fetch ({ store }){
+    await store.dispatch('todo/fetchTodos')
+  },
+
 data(){
   return {
     newTodo: '',
   }
 },
 
-created(){
-  return this.$store.dispatch('todo/fetchTodos')
-},
-
 computed:{
   todos(){
+    
     return this.$store.getters['todo/todos']
   }
 },
@@ -79,22 +80,19 @@ computed:{
 methods: {
   addTodo(){
     if(this.newTodo){
-    let newTodo = {
-      id:Date.now(),
-      title:this.newTodo,
-      done:false
-    } 
-    this.$store.dispatch('todo/addTodo',newTodo)
+    this.$store.dispatch('todo/addTodo',this.newTodo)
     this.newTodo=''
-    this.$store.dispatch('todo/fetchTodos')
     }
   },
   doneTodo(id){
     let todo = this.todos.filter(todo => todo.id === id)[0]
-    todo.done = !todo.done
+    // todo.done = !todo.done
+    this.$store.dispatch('todo/doneTodo',todo)
+
 },
-  async deleteTodo(id){
-    await this.$store.dispatch('todo/deleteTodo',id)
+  deleteTodo(index){
+    this.$store.dispatch('todo/deleteTodo',this.todos[index].id)
+    console.log(this.todos[index].id)
   }
 }
 }
