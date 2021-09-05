@@ -2,12 +2,14 @@
 <div>
   <h1>TODO LIST</h1>
   <v-btn @click="toCreate">Todoの追加</v-btn>
+  <!-- ＜＜＜＜＜セレクトバー＞＞＞＞＞ -->
   <v-select
-          :items="items"
-          :value="items[0]"
-          
+          :items="status"
+          :value="status[0]"
+          @change="changeStatus"
           outlined
         ></v-select>
+      <!-- ＜＜＜＜＜Todo＞＞＞＞＞ -->
     <v-list
       subheader
       two-line
@@ -72,7 +74,9 @@ export default {
 data(){
   return {
     newTodo: '',
-    items:["全て","未着手","作業中","完了"]
+    status:[
+"全て","未着手","作業中","完了"
+      ]
   }
 },
 
@@ -101,8 +105,11 @@ toCreate(){
 
 editTodo(id){
   this.$router.push({ name: 'edit-id' , params: { id: id }})
-}
+},
 
+changeStatus(e){
+  console.log(e)
+}
 }
 
 }

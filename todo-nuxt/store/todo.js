@@ -89,6 +89,21 @@ getEditTodo(state,getEditTodo){
   state.editTodo = []
   state.editTodo.push(getEditTodo)
   // console.log(state.editTodo)
+},
+
+newEditTodo(state,editTodo){
+  const editTodoData = state.editTodo
+  editTodoData.forEach(
+    data => {data.todo = editTodo}
+  )
+  console.log(this.editTodo)
+},
+
+changeStatus(state,status){
+  const editTodoData = state.editTodo
+  editTodoData.forEach(
+    data => {data.status = status}
+  )
 }
 
 }

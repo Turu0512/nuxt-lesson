@@ -12,7 +12,7 @@
       <v-col cols="8">
         
         <v-text-field
-        :value="todo.todo"
+        :value="newEditTodo.todo"
         @input="newEditTodos"
         @keyup.enter="newEditTodos"
         outlined
@@ -21,7 +21,7 @@
         ></v-text-field>
         <v-select
           :items="items"
-          :value="todo.status"
+          :value="newEditTodo.status"
           @change="status"
           outlined
         ></v-select>
@@ -32,6 +32,7 @@
     </v-row>
   </v-container>
 </div>
+  <p>{{this.$store.state.todo.editTodo}}</p>
 
 </v-app>
 </template>
@@ -39,31 +40,31 @@
 <script>
 export default {
   
-  async created(){
-    await this.$store.dispatch('todo/fetchEditTodo',this.$route.params.id)
-  },
-
-data(){
-  return{
-    newEditTodo : {
-      todo:"",
-      status:"",
-      id:this.$route.params.id
+  
+  data(){
+    return{
+      newEditTodo : {
     },
+    
     newStatus:"",
     items:["未着手","作業中","完了"]
   }
   
 },
+  async created(){
+    await this.$store.dispatch('todo/fetchEditTodo',this.$route.params.id)
+    console.log(this.$store.state.todo.editTodo)
+    const edit=this.$store.state.todo.editTodo
+    edit.forEach(data => {this.newEditTodo = data})
+    
+  },
 
 methods:{
   changeTodo(todo){
     console.log(todo)
   },
   newEditTodos(e){
-    this.newEditTodo.todo=e,
-    
-    console.log(this.newEditTodo)
+    this.$store.commit('todo/newEditTodo',e)
 
   },
   updateTodo(){
@@ -72,9 +73,8 @@ methods:{
   },
   // ＜＜＜＜＜状態管理＞＞＞＞＞
   status(e){
-    this.newEditTodo.status=e,
-    
-    console.log(this.newEditTodo)
+this.$store.commit('todo/changeStatus',e) 
+
   }
 },
 
