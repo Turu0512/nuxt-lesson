@@ -1,9 +1,11 @@
 export const state = () => ({
 todos: [
-]
+],
+editTodo:""
 })
 
 export const actions = {
+  // ＜＜＜＜＜Todo一覧用＞＞＞＞＞
  addTodo({dispatch}, payload){
   this.$fire.firestore.collection("todos").add({})
   .then((res) => {
@@ -12,13 +14,13 @@ export const actions = {
     .set({
       todo: payload,
       done: false,
-      id: res.id
+      id: res.id,
+      status:"未着手"
     })
     .then(() => {
       dispatch('fetchTodos')
     })
   })
-  
  },
 
 async fetchTodos({commit}){
@@ -31,7 +33,6 @@ async fetchTodos({commit}){
     todo.push(doc.data())
   });
   commit('addTodos',todo)
-
   
  },
 
@@ -45,15 +46,21 @@ async fetchTodos({commit}){
   dispatch('fetchTodos')
 
 },
-
-async doneTodo({dispatch},todo){
-    todo.done = !todo.done
-  let todoRef = this.$fire.firestore.collection("todos").doc(todo.id)
-  await todoRef.update(todo)
-  // dispatch('fetchTodos')
+// ＜＜＜＜＜Edit用＞＞＞＞＞
+async fetchEditTodo({commit}, id){
+  // commit('initTodos')
+  const getTodoRef = this.$fire.firestore.collection("todos").doc(id)
+  const getTodo = await getTodoRef.get()
+  const getEditTodo = getTodo.data()
   
-}
+  commit('getEditTodo',getEditTodo)
+ },
 
+async newEditTodo({commit},todo){
+  const editTodoRef = this.$fire.firestore.collection("todos").doc(todo.id)
+  await editTodoRef.update(todo)
+  this.$router.push("/todo")
+}
 
 }
 
@@ -65,12 +72,35 @@ state.todos = [];
 
 addTodos(state,todos){
 state.todos=todos
+  // console.log(state.todos)
+
 },
+
+doneTodo(state,todo){
+  todo.done = !todo.done
+  let todoRef = this.$fire.firestore.collection("todos").doc(todo.id)
+  todoRef.update(todo)
+  // dispatch('fetchTodos')
+  
+},
+
+// ＜＜＜＜＜Edit用＞＞＞＞＞
+getEditTodo(state,getEditTodo){
+  state.editTodo = []
+  state.editTodo.push(getEditTodo)
+  // console.log(state.editTodo)
+}
 
 }
 
 export const getters = {
  todos: state => {
+  //  console.log(state.todos)
    return state.todos
  },
+
+ editTodo: state => {
+  // console.log(state.editTodo)
+  return state.editTodo
+},
 }

@@ -1,18 +1,13 @@
 <template>
 <div>
   <h1>TODO LIST</h1>
-  <v-text-field
-  v-model="newTodo"
-  @click:append="addTodo"
-  @keyup.enter="addTodo"
-    class="pa-3"
-    solo
-    label="addTodo"
-    append-icon="mdi-plus"
-    hide-details
-    clearable
-  ></v-text-field>
-
+  <v-btn @click="toCreate">Todoの追加</v-btn>
+  <v-select
+          :items="items"
+          :value="items[0]"
+          
+          outlined
+        ></v-select>
     <v-list
       subheader
       two-line
@@ -35,10 +30,20 @@
               <v-list-item-title :class="{'text-decoration-line-through' : todo.done}">
                 {{todo.todo}}
                 </v-list-item-title>
-              
             </v-list-item-content>
-
-            <v-list-item-action>
+        <!-- ＜＜＜＜＜ステータスボタン＞＞＞＞＞ -->
+        <v-list-item-action class="mr-6">
+              <v-btn outlined>{{todo.status}}</v-btn>
+        </v-list-item-action>
+      <!-- ＜＜＜＜＜編集ボタン＞＞＞＞＞ -->
+        <v-list-item-action>
+          <v-btn icon
+          @click.stop="editTodo(todo.id)">
+            <v-icon color="grey lighten-1">mdi-comment-edit-outline</v-icon>
+          </v-btn>
+        </v-list-item-action>
+      <!-- ＜＜＜＜＜削除ボタン＞＞＞＞＞ -->
+        <v-list-item-action>
           <v-btn icon
           @click.stop="deleteTodo(index)">
             <v-icon color="grey lighten-1">mdi-delete</v-icon>
@@ -67,34 +72,39 @@ export default {
 data(){
   return {
     newTodo: '',
+    items:["全て","未着手","作業中","完了"]
   }
 },
 
 computed:{
   todos(){
-    
     return this.$store.getters['todo/todos']
   }
 },
 
 methods: {
-  addTodo(){
-    if(this.newTodo){
-    this.$store.dispatch('todo/addTodo',this.newTodo)
-    this.newTodo=''
-    }
-  },
+  
   doneTodo(id){
     let todo = this.todos.filter(todo => todo.id === id)[0]
     // todo.done = !todo.done
-    this.$store.dispatch('todo/doneTodo',todo)
+    this.$store.commit('todo/doneTodo',todo)
 
 },
   deleteTodo(index){
     this.$store.dispatch('todo/deleteTodo',this.todos[index].id)
     console.log(this.todos[index].id)
-  }
+  },
+
+toCreate(){
+  this.$router.push("create")
+},
+
+editTodo(id){
+  this.$router.push({ name: 'edit-id' , params: { id: id }})
 }
+
+}
+
 }
 </script>
 

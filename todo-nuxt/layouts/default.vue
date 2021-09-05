@@ -54,8 +54,8 @@
   data: () => ({ 
     drawer: null,
     items: [
-      { title: 'Todo', icon: 'mdi-format-list-checks' ,to:"/todo"},
-      { title: 'About', icon: 'mdi-account-plus-outline' ,to:"/create"},
+      { title: 'Todoリスト', icon: 'mdi-format-list-checks' ,to:"/todo"},
+      { title: '新規Todoの追加', icon: 'mdi-account-plus-outline' ,to:"/create"},
       ],
   }),
 }
