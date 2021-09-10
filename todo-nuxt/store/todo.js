@@ -1,7 +1,9 @@
+import firebase from '@/plugins/firebase'
 export const state = () => ({
 todos: [
 ],
-editTodo:""
+editTodo:"",
+sortTodo:[]
 })
 
 export const actions = {
@@ -46,6 +48,34 @@ async fetchTodos({commit}){
   dispatch('fetchTodos')
 
 },
+
+async deleteSelectTodo({dispatch},todo){
+  const deleteTodo = []
+  todo.forEach(data => {
+    deleteTodo.push(data.id)})
+  const deleteTodoRef = this.$fire.firestore.collection("todos")
+  // deleteTodo.forEach(id => {deleteTodoRef.doc(id).delete()})
+  for(let id of deleteTodo){
+    await deleteTodoRef.doc(id).delete()
+  }
+
+ dispatch('fetchTodos')
+},
+
+async sortTodo({commit},st){
+  const getTodoRef = this.$fire.firestore.collection("todos").orderBy("todo","asc")
+  const getTodo = await getTodoRef.get()
+  let todo = []
+  getTodo.forEach(doc => {
+    todo.push(doc.data())
+  })
+  const sortedTodo = todo.filter(data =>
+    data.status === st 
+  )
+
+  commit("sortTodo",sortedTodo)
+},
+
 // ＜＜＜＜＜Edit用＞＞＞＞＞
 async fetchEditTodo({commit}, id){
   // commit('initTodos')
@@ -60,9 +90,16 @@ async newEditTodo({commit},todo){
   const editTodoRef = this.$fire.firestore.collection("todos").doc(todo.id)
   await editTodoRef.update(todo)
   this.$router.push("/todo")
+},
+
+// ＜＜＜＜＜ログイン＞＞＞＞＞
+login(){
+  const google_auth_provider = new firebase.auth.GoogleAuthProvider();
+  this.firebase.auth().signInWithRedirect(google_auth_provider)
+}
 }
 
-}
+// ＜＜＜＜＜＜＜＜＜＜＜＜＜mutation＞＞＞＞＞＞＞＞＞＞＞＞＞
 
 export const mutations = {
 initTodos(state){
@@ -84,6 +121,17 @@ doneTodo(state,todo){
   
 },
 
+sortTodo(state,sortedTodo){
+  if(sortedTodo.length == 0){
+    state.todos = sortedTodo
+    alert('該当するデータがありません ORZ')
+    return
+  }
+  state.todos = sortedTodo
+  console.log(state.todos)
+
+},
+
 // ＜＜＜＜＜Edit用＞＞＞＞＞
 getEditTodo(state,getEditTodo){
   state.editTodo = []
@@ -96,7 +144,6 @@ newEditTodo(state,editTodo){
   editTodoData.forEach(
     data => {data.todo = editTodo}
   )
-  console.log(this.editTodo)
 },
 
 changeStatus(state,status){
@@ -104,7 +151,7 @@ changeStatus(state,status){
   editTodoData.forEach(
     data => {data.status = status}
   )
-}
+},
 
 }
 

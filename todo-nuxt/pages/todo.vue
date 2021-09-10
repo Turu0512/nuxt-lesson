@@ -6,7 +6,7 @@
   <v-select
           :items="status"
           :value="status[0]"
-          @change="changeStatus"
+          @change="sortTodo"
           outlined
         ></v-select>
       <!-- ＜＜＜＜＜Todo＞＞＞＞＞ -->
@@ -60,6 +60,7 @@
 
         
     </v-list>
+    <v-btn @click="deleteSelectTodo">選択削除</v-btn>
 </div>
 </template>
 
@@ -75,8 +76,9 @@ data(){
   return {
     newTodo: '',
     status:[
-"全て","未着手","作業中","完了"
-      ]
+    "全て","未着手","作業中","完了"
+    ],
+    
   }
 },
 
@@ -99,6 +101,12 @@ methods: {
     console.log(this.todos[index].id)
   },
 
+  deleteSelectTodo(){
+    const deleteSelectTodoRef = this.todos
+    const deleteSelectTodo = deleteSelectTodoRef.filter(x => x.done)
+    this.$store.dispatch('todo/deleteSelectTodo',deleteSelectTodo)
+  },
+
 toCreate(){
   this.$router.push("create")
 },
@@ -107,8 +115,12 @@ editTodo(id){
   this.$router.push({ name: 'edit-id' , params: { id: id }})
 },
 
-changeStatus(e){
-  console.log(e)
+sortTodo(e){
+  if(e === "全て"){
+    this.$store.dispatch('todo/fetchTodos') 
+    return
+  }
+  this.$store.dispatch('todo/sortTodo',e) 
 }
 }
 

@@ -41,6 +41,9 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Application</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn class="info mr-5" >ログイン</v-btn>
+      <v-btn class="info" @click="logout">ログアウト</v-btn>
     </v-app-bar>
 
     <v-main>
@@ -50,7 +53,17 @@
 </template>
 
 <script>
+import firebase from 'firebase'
   export default {
+    created(){
+      firebase.auth().onAuthStateChanged(user => {
+          const  { uid , displayName } = user
+          this.$store.commit("login/setLoginUser",{ uid , displayName})
+        console.log(uid)
+        console.log(displayName)
+      })
+    },
+  name: "aaa",
   data: () => ({ 
     drawer: null,
     items: [
@@ -58,5 +71,12 @@
       { title: '新規Todoの追加', icon: 'mdi-account-plus-outline' ,to:"/create"},
       ],
   }),
+
+  methods: {
+    logout(){
+      console.log("ok")
+      this.$store.commit("login/logout")
+    }
+  }
 }
 </script>

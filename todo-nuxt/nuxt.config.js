@@ -39,6 +39,7 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    
     '@nuxtjs/dotenv',
     [
       '@nuxtjs/firebase',
@@ -53,11 +54,34 @@ export default {
           measurementId: process.env.MEASURMENT_ID,
         },
         services: {
-          firestore: true // Just as example. Can be any other service.
+          firestore: true, // Just as example. Can be any other service.
+          // auth: {
+          //   persistence: 'local', // default
+          //   initialize: {
+          //     onAuthStateChangedAction: 'onAuthStateChangedAction',
+          //   },
+          //   ssr: true, // default
+          // },
+        
         }
       }
     ]
+    
   ],
+
+  pwa: {
+    meta: false,
+    icon: false,
+   
+    workbox: {
+      importScripts: [
+        '/firebase-auth-sw.js'
+      ],
+      // by default the workbox module will not install the service worker in dev environment to avoid conflicts with HMR
+      // only set this true for testing and remember to always clear your browser cache in development
+      dev: true
+    }
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -80,5 +104,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-  }
+  },
+
+  
 }
