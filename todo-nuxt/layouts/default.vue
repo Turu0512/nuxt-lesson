@@ -1,10 +1,14 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer 
+    <v-navigation-drawer
     v-model="drawer"
     app>
       <v-list-item>
+        <v-list-item-avatar>
+          <img v-if="photoURL" :src="photoURL">
+        </v-list-item-avatar>
         <v-list-item-content>
+          <v-list-item-title>{{ userName }}</v-list-item-title>
           <v-list-item-title class="text-h6">
             TODO LIST
           </v-list-item-title>
@@ -37,13 +41,17 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-app-bar app >
+      <v-app-bar-nav-icon 
+      @click="drawer = !drawer"
+      v-show="$store.state.login.loginUser" 
+      
+      ></v-app-bar-nav-icon>
 
       <v-toolbar-title>Application</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn class="info mr-5" >ログイン</v-btn>
-      <v-btn class="info" @click="logout">ログアウト</v-btn>
+      
+      <v-btn class="info" @click="logout" v-if="this.$store.state.login.loginUser">ログアウト</v-btn>
     </v-app-bar>
 
     <v-main>
@@ -54,14 +62,18 @@
 
 <script>
 import firebase from 'firebase'
+  
   export default {
     created(){
       firebase.auth().onAuthStateChanged(user => {
-          const  { uid , displayName } = user
-          this.$store.commit("login/setLoginUser",{ uid , displayName})
-        console.log(uid)
-        console.log(displayName)
-      })
+          if(user){
+          const  { uid , displayName , photoURL} = user
+          this.$store.commit("login/setLoginUser",{ uid , displayName , photoURL})
+          if(this.$router.currentRoute.name === 'login')this.$router.push({name: 'todo'})
+      }else{
+        this.$store.commit("login/logout")
+        this.$router.push({ name: 'login'})
+      }})
     },
   name: "aaa",
   data: () => ({ 
@@ -74,9 +86,18 @@ import firebase from 'firebase'
 
   methods: {
     logout(){
-      console.log("ok")
-      this.$store.commit("login/logout")
+      this.$store.dispatch("login/logoutFb")
     }
+  },
+
+  computed:{
+    userName(){
+    return this.$store.getters["login/userName"]
+  },
+  photoURL(){
+    return this.$store.getters["login/photoURL"]
   }
 }
+  }
+  
 </script>
