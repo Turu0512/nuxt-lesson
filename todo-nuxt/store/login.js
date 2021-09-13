@@ -7,7 +7,7 @@ loginUser:""
 export const mutations = {
   setLoginUser(state,user){
     state.loginUser = user
-    console.log(state.loginUser)
+    // console.log(state.loginUser)
   },
 
  logout(state){

@@ -78,7 +78,6 @@ data(){
     status:[
     "全て","未着手","作業中","完了"
     ],
-    
   }
 },
 
@@ -98,7 +97,7 @@ methods: {
 },
   deleteTodo(index){
     this.$store.dispatch('todo/deleteTodo',this.todos[index].id)
-    console.log(this.todos[index].id)
+    // console.log(this.todos[index].id)
   },
 
   deleteSelectTodo(){

@@ -32,7 +32,7 @@
     </v-row>
   </v-container>
 </div>
-  <p>{{this.$store.state.todo.editTodo}}</p>
+  <!-- <p>{{this.$store.state.todo.editTodo}}</p> -->
 
 </v-app>
 </template>
@@ -60,9 +60,6 @@ export default {
   },
 
 methods:{
-  changeTodo(todo){
-    console.log(todo)
-  },
   newEditTodos(e){
     this.$store.commit('todo/newEditTodo',e)
 
