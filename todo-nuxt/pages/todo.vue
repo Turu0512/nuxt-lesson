@@ -127,5 +127,4 @@ sortTodo(e){
 </script>
 
 <style>
-
 </style>
