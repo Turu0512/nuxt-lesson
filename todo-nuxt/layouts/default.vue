@@ -64,6 +64,7 @@
 import firebase from 'firebase'
   
   export default {
+
     created(){
       firebase.auth().onAuthStateChanged(user => {
           if(user){
@@ -74,7 +75,9 @@ import firebase from 'firebase'
         this.$store.commit("login/logout")
         this.$router.push({ name: 'login'})
       }})
+        
     },
+    
   name: "aaa",
   data: () => ({ 
     drawer: null,

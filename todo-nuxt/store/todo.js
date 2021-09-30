@@ -92,13 +92,8 @@ async newEditTodo({commit},todo){
   this.$router.push("/todo")
 },
 
-// ＜＜＜＜＜ログイン＞＞＞＞＞
-login(){
-  const google_auth_provider = new firebase.auth.GoogleAuthProvider();
-  this.firebase.auth().signInWithRedirect(google_auth_provider)
-}
-}
 
+}
 // ＜＜＜＜＜＜＜＜＜＜＜＜＜mutation＞＞＞＞＞＞＞＞＞＞＞＞＞
 
 export const mutations = {

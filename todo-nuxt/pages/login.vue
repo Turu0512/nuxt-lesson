@@ -57,6 +57,8 @@ createUser(){
 
 
   login(){
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  .then(() => {
     firebase.auth().signInWithEmailAndPassword(this.email, this.password)
   .then((userCredential) => {
      // ログイン成功時の処理
@@ -67,24 +69,18 @@ createUser(){
     window.alert('ログインに失敗しました')
         console.log(error)
   });
+  })
   },
 
     googleLogin() {
-      const provider = new firebase.auth.GoogleAuthProvider()
-      firebase.auth().signInWithRedirect(provider)
-      .then((result) => {
-        // ログイン成功時の処理
-        window.alert('ログインしました')
-      }).catch((error) => {
-        // ログイン失敗時の処理
-        window.alert('ログインに失敗しました')
-        console.log(error)
-      })
-    }
+    this.$store.dispatch('login/googleLogin')
+    
   }
+}
 }
 </script>
 
 <style>
+
 
 </style>

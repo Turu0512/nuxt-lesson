@@ -68,6 +68,18 @@
 
 
 export default {
+  created(){
+      firebase.auth().onAuthStateChanged(async(user) => {
+          if(user){
+          const  { uid , displayName , photoURL} = user
+          await this.$store.commit("login/setLoginUser",{ uid , displayName , photoURL})
+          if(this.$router.currentRoute.name === 'login')this.$router.push({name: 'todo'})
+      }else{
+        this.$store.commit("login/logout")
+        this.$router.push({ name: 'login'})
+      }})
+        
+    },
   async fetch ({ store }){
     await store.dispatch('todo/fetchTodos')
   },
